@@ -1,0 +1,32 @@
+#version 330 core
+
+// Interpolated values from the vertex shaders
+in vec2 UV;
+
+
+// Ouput data
+out vec4 color;
+
+// Values that stay constant for the whole mesh.
+uniform sampler2D myTextureSampler;
+uniform sampler2D textureSampler2;
+uniform samplerCube cubeSampler;
+
+// here happens the warping!!!
+void main(){
+	// just show the texture in myTextureSampler
+	vec2 tc=UV;
+	vec2 tt = tc - vec2(0.5);
+	vec2 dir;
+	float angle = atan(tt.y, tt.x);
+	float l = length(tt);
+	tc.x = angle/6.28;
+	tc.y = l*2;//pow(l, 2);
+	//float angle = tc.x * 6.28;
+	//float l = tc.y;
+	//vec2 dir = vec2(sin(angle), cos(angle));
+	//tc =  dir*vec2(l);
+	color = texture( myTextureSampler, UV ).rgba; // use tc instead of UV
+	// make the quad half transparent so that we still see the scene behind it
+	color.a = 1.0;
+}
